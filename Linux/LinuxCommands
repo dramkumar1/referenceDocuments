@@ -1,0 +1,288 @@
+User based operations (user management)	
+Add New User	
+adduser <username>
+
+change password of user	
+passwd jim
+
+lock an account	
+passwd -l account
+
+unlock an account	
+passwd -u account
+
+swithc  to user	
+su <username>
+
+find out information about hostname, kernel, version, etc	
+uname -a
+
+determine the uid of account	
+id account
+
+add user to the sudo user group	
+usermod -aG sudo username
+
+add user to super user group	
+adduser <username> sudo
+
+identify how many root accounts are there in the system	
+awk -F: '($3 == "0") {print}' /etc/passwd
+
+delete user accounts	
+userdel -r accountname
+
+
+free space	(to check free space available)
+free
+df
+	
+list pci  utils	- lspci
+usb  utils  -	lsusb
+apt install pcmciautils -	lspcmcia
+	
+df -ah	//find out the disk free space and information about the file system
+service <serviceName> status	//to get status of service
+service <serviceName> start	//to start a service
+service <serviceName> stop	//to stop a service
+systemctl status <serviceName>	//to get status of service
+systemctl	//to list all systemctl services
+systemctl stop <service>	//to stop a systemctl service
+systemctl disable <service>	//to disable a systemctl service. stops the service even when booting
+	
+	
+ps aux | grep processName	//to view process usage 
+locate <filename>	        //find files, binaries or anything
+whereis <binary's name>	  //find binaries only
+which 	                  //find only the location of the binary/command
+
+find command:
+find <directory list to search> <options> <expression>	
+find / -type f  -name apache2	
+find /home/user/Documents	  //list all files in folder 'Documents'
+find	                      //list all files in the current folders
+find --maxdepth 2	          //list files from maximum depth of 2 levels
+find . -type f	            //find from the current folder for type 'files' and not directories
+find . -type d	            //find from the current folder for type 'directories' and not files
+find . -name "5.txt"	      //find from the current director for the file named 5.txt
+find . -name "*.txt"	      //find all files ending with .txt
+find / -type f  -size +100K	//find files of size greater than 100Kb
+find / -type f  -size +100K -size -5M	//find files of size greater than 100Kb and less than 5 MB
+sudo find / -type f -size +100K -size -5M -exec cp {} ~/Desktop/copy_here \;	//find all files that are more than 100K and less than 5M and copy those files to copy_here folder in Desktop
+sudo find / -type f -size +100K -size -5M -ok cp {} ~/Desktop/copy_here \;	//same as above command but ask for user interaction while moving
+find haystack/ -type f -name "needle.txt" -exec mv {} ~/Desktop \;	//find 1 file called needle.txt from haystack folder and move it to desktop
+
+search for files	
+find /etc -name hosts
+find /etc -name "hosts*"
+
+find files that belong to other users	
+find / -user UID
+find files that do not have any user	
+find / -nouser
+	
+history command:
+history	to view history of all the commands used in the terminal
+!1	to run the first command in the history
+!8	to run the eigth command in the history
+!!	to run the recent command
+history -c; history -w	clear the history and write those changes to terminal
+	
+| less -N	show less with line numbers
+
+CURL command
+curl	curl https://<sitename>.com
+curl -L	//follow redirection
+curl -I	//show response
+curl -v	//show along with tls handshake
+curl --data "log=username&pwd=password" https://<sitename>	//login with credentials
+curl http://example.com -o my.file //to download a file
+	
+netcat	
+nc	
+nc -l -p 4444 -e /bin/bash;	
+	
+Calander, calender	
+Cal 2020	//calander of year 2020
+cal 1 2020	//cal of jan 2020
+cal -A 1 1 2020	//cal of jan 2020 + after 1 month calender
+cal -B 1 1 2020	//cal of jan 2020 + before 1 month calender
+cal -B 1 -A 1 1 2020	//cal before and after 1 month of provided month
+	
+manual pages	
+man -k which	//lookup on manual for the keyword/command which
+	
+cat command:
+Input, output and error streams	
+cat 1> output.txt	//write to file output.txt
+cat > output.txt	//write to file output.txt
+cat 0< input.txt 1> hello.txt	//read from input.txt and write to hello.txt
+cat 0< input.txt 1> /dev/pts/1	
+tty	//path of the terminal window
+cat 2> error.txt	write error to error.txt
+	
+cut command	
+cut --delimiter " " --fields 1	//delimiter is space and field to be displayed is 1
+date | cut --delimiter " " --fields 1	//cut the output of data command as mentioned
+cut < date.txt --delimiter " " --fields 1	//cut from the file date.txt
+	
+tee command
+date | tee datefile.txt | cut --delimiter " " --fields 1	//save the output of date to datefile.txt, cut the output of date as mentioned and display in terminal"
+"tee command cannot be used after we have used redirection (>)
+if need to be used, then we need to use one more tee"
+	
+xargs	can be used when the command does not accept standard input
+date | xargs echo "hello"	//print hello along with date
+cat filestodelete.txt | xargs rm	//to remove the files from the list (filestodelete.txt)
+	
+alisas command	
+.bash_aliases	//file to be created in home folder where alias needs to be updated
+alisas getdates='date | tee /home/date.txt | cut --delimiter=" " --fields=1 | tee ...'	
+	
+list files and wildcard characters	
+ls	list contents
+ls -l	//long list
+ls -a	//list all (including hidden folders)
+ls -F	//view foldes and files differentiation
+ls -lh	//list files in human readable format (with sizes in kb and mb)
+ls Documents/ Downloads/ Desktop/	//list contents of all 3 folders
+ls *	//list everything in the current folders
+ls D*	//list directories that start with D
+ls *.txt	//list everything within the folders that ends with .txt
+?	//match 1 characters
+ls file[1234567890].txt	//matches 1 character within bracker: output: file1.txt file2.txt file3.txt"
+ls file[0-9].txt	//same output as above
+ls file[A-Z].txt	//output: fileA.txt fileB.txt fileC.txt"
+ls file[0-9ABC].txt	//output: file1.txt file2.txt file3.txt fileA.txt fileB.txt fileC.txt
+	
+	
+mkdir -p bla/thing/shablam	//create directory with folder paths
+mkdir folder1 folder2 folder3	//create multiple folders
+mkdir {jan,feb,mar}_{2019,2020,2021}	//create multiple folders like jan_2019, feb_2019,Mar_2019, Jan_2020,..
+
+touch file{A,B,C}	//create fileA, fileB, fileC
+touch file{A..C}	//create fileA, fileB, fileC
+touch haystack/folder$(shuf -i 1-500 -n 1)/needle.txt	//create a file needle.txt inside any of the random folders from 1 to 500
+
+rm file1.txt Documents/file2.txt Desktop/file3.txt	//remove fil1, file2 and file3
+rm *.txt	//remove all .txt files
+rm -r delfolder/	//remove a folder
+rm -ri delfolder/	//interactively delete files inside a folder
+	
+nano text editor:
+configuration file: /etc/nanorc	
+^ - control command	
+M - Alt	
+	
+locate -i *.conf	//ignore case sensitivity
+locate -i --limit 3 *.conf	//limit to 3 results
+locate -S	//"view locate database present in /var/lib/mlocate/mlocate.db"
+sudo updatedb	//update the db with latest data to index and search latest files
+	
+	
+sort words.txt	//sort the contents of file
+sort filename | tac	//to get the reverse of the sort 
+sort -r words.txt	//same as above, reverse sort
+sort -n numbers.txt	//to sort the result in numberial way
+sort -nr numbers.txt	//sort numbers in reverse order
+sort -u numbers.txt	//show only unique values in results after sorting
+ls -l /etc | head -n 20 | sort -k 5n	//sort the result in the fifth column (size of the file). k means KEYDEF
+ls -lh /etc | head -n 20 | sort -k 5h	//sort in human readable logic such as if file size is displayed in Kb or Mb
+ls -lh /etc | head -n 20 | sort -k 6M	//Sort in human readable calender format
+	
+grep -v <text>	//show all lines that  do not contain <text>
+grep <searchText> <filename>	
+grep -i <searchText> <filename>	//-i Case insensitive
+-c //show only count
+-v //Inverse of search result"
+	
+compressing and archiving files using tar	
+tar -cvf <targetTarFile.tar> file1.txt file2.txt file3.txt	"add 3 files to tar -c compress -v verbose -f file (mandatory)"
+tar -xvf <targetTarFile.tar>	"extract files from tar -x extract"
+tar -tf <targetTarFile.tar>	//-t test files within the archive without extracting
+tar -cvzf <targetTarFile.tar.gz> file1.txt file2.txt file3.txt	"add 3 files to tar and gzip the same - z gzip after tar"
+tar -cvjf <targetTarFile.tar.bz2> file1.txt file2.txt file3.txt	"add 3 files to tar and bzip2 the same - z gzip after tar"
+tar -xvzf <targetTarFile.tar.gz>	extract gzip and tar the file
+tar -xvjf <targetTarFile.tar.bz2>	extract bzip2 and tar the file
+gzip targetTarFile.tar	//compressed to targetTarFile.tar.gz
+gunzip targetTarFile.tar.gz	//get the tar file back (decompress)
+bzip2 targetTarFile.tar	//compressed to targetTarFile.tar.bz2
+bunzip2 targetTarFile.tar.bz2	//get the tar file back (decompress)
+zip <targetTarFile.zip> file1.txt file2.txt file3.txt	create a zip compressed file containing 3 files
+unzip targetTarFile.zip	unzip a zip compressed file
+tar -xJf filename.tar.xz	"extract from xz compressed file -J for .xz compression -j for bzip2 compression"
+	
+crontab command:
+task scheduling with crontab	
+crontab -e	to open crontab "has 6 columns as given in the below format: m h dom mon dow command"	"m - minutes h - hours dom - date of month
+mon - month (1-12 or first 3 letters of month in caps)
+dow - day of week (0-6 or first 3 letters of the week)
+command - any command that needs to be scheduled"
+
+* is the only wildcard character that is accepted (for every)	
+m h dom mon dow command
+* *  *   *    *   echo ""hello world"" >> ~/Desktop.txt
+*/7 0,15,30,45"	"execute the echo command for every minute */7 for every 7 minutes 
+0,15,30,45 for every 15 mins"
+	
+	
+Installing process	
+gcc	gnu c compiler
+sudo apt-get install gcc	//install gcc
+bash configure	//to install from configure file
+make	//make and install from makefile
+sudo make install	
+make && sudo make install	to make and make install from a single command
+	
+	
+check ubuntu packages	
+https://packages.ubuntu.com	
+lsb_release -a	"see the details of ubuntu that is being installed
+to get codename of a distribution"
+apt-cache search docx	to get all packages that has docx in its keyword
+apt-cache show <packageName>	to show details about the package name
+/var/lib/apt/lists	diectory containing all the list of packages present in apt-cache
+sudo apt-get update	update the lists in cache and make it up to date
+sudo apt-get upgrade	upgrade each and every package in the system
+sudo apt-get install <packageName>	install a package
+sudo nano /etc/apt/sources.list	"to edit sources of each packages
+this can be edited to download source code as well"
+sudo apt-get install dpkg-dev	downloaded to view and edit source code
+sudo apt-get source <packageName>	to get only the source of the package and will not install the package
+sudo apt-get remove <packageName>	remove packages but will not remove configuration files
+sudo apt-get purge <packageName>	remove packages along with configuration files
+sudo apt-get autoremove	remove packages that are left behind dangling
+/var/cache/apt/archives	path where archive files are left behind even after removing
+sudo apt-get clean	remove all left out files in archives
+sudo apt-get autoclean	check what is there and delete only those that are never used again
+	
+	
+	
+PAM	Pluggable Authentication Controls
+/etc/pam.d/system-auth	
+	
+netstat -tulpn	to view all processess and open and listening ports
+lsof -i	list open files, used to view all listening and open connections
+	
+	
+mount	display all existing mounts
+/mnt	default location of mount
+mount /dev/mnt /mnt	
+less /etc/fstab	to view information about file system
+lsblk	to view partitions and mount information
+	
+export EDITOR=nano	to change the default editor to nano
+export EDITOR=vi	to change the default editor to vi
+	
+visudo	to edit the sudo properties
+	
+sudo -ll -U jim	view all permissions that user jim has
+	
+/etc/hosts.allow	"configuring tcp wrappers
+rules need to be written in each of these files to allow or deny tcp connections
+
+Rule format:
+Service(s):client(s)[:Action(s)]
+eg:
+sshd:10.10.10.5"
+/etc/hosts.deny	configuring tcp wrappers
